@@ -1,3 +1,4 @@
+from sys import executable
 import discord
 from discord.ext import commands
 import youtube_dl
@@ -32,8 +33,10 @@ class music(commands.Cog):
         with youtube_dl.YoutubeDL(YDL_OPTIONS) as ydl:
             info = ydl.extract_info(url, download=False)
             url2 = info['formats'][0]['url']
-            path = r'C:\Users\tinge\Documents\ffmpeg-2021-11-10-git-44c65c6cc0-full_build\bin'
-            source = await discord.FFmpegOpusAudio.from_probe(url2 , method = 'fallback')
+            print(url2)
+            # path = r'C:\Users\elev\Documents\FFmpeg\bin'
+            # print(path)
+            source = await discord.FFmpegOpusAudio.from_probe(url2 , method = 'fallback', executable="C:/Users/elev/Documents/FFmpeg/bin/ffmpeg.exe")
             vc.play(source)
     
     @commands.command()

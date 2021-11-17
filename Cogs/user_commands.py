@@ -2,7 +2,7 @@ import random
 import discord
 from discord.ext import commands
 import giphy_client
-from giphy_client.rest import ApiExeption
+from giphy_client.rest import ApiException
 
 class user_commands (commands.Cog):
 
@@ -24,11 +24,11 @@ class user_commands (commands.Cog):
     async def gif(self, ctx,*,q="Smile"):
 
         api_key = 'H4TPZxw7PkocCPJ7IM5hDPJwxhvzmimS'
-        api_instance = giphy_client.DefultApi()
+        api_instance = giphy_client.DefaultApi()
 
         try:
 
-            api_responce = api_instance.gifs_search_get(api_key, q, limit=5, rating='g')
+            api_responce = api_instance.gifs_search_get(api_key, q, limit=5, rating='r')
             lst = list(api_responce.data)
             giff = random.choice(lst)
 
@@ -37,7 +37,7 @@ class user_commands (commands.Cog):
 
             await ctx.channel.send(embed=emb)
 
-        except ApiExeption as e:
+        except ApiException as e:
             print("Exception when calling Api")
 
 def setup(client):
