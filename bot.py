@@ -37,5 +37,10 @@ async def on_member_join(member):
 async def on_member_remove(member):
     print (f'{member} has left the server.')
 
+@client.event
+async def on_command_error(ctx, error):
+    if isinstance(error, commands.CommandNotFound):
+        await ctx.send('Command not found. Type .help to see the existing commands.')
+
 
 client.run('OTA3MjAyNDUzNzUyMTMxNTk1.YYjwHw.2p1MiK3An7n9GZ-RvyZfvIgpNAQ')

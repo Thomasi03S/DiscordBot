@@ -44,10 +44,20 @@ class music(commands.Cog):
         await ctx.voice_client.pause()
         await ctx.send("Paused!")
 
+    @pause.error
+    async def pause_error(self, ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send('Please enter the link to the sound witch is playing.')
+
     @commands.command()
     async def resume(self, ctx, url):
         await ctx.voice_client.resume()
         await ctx.send("Playing again!")
+    
+    @resume.error
+    async def resume_error(self, ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send('Please enter the link to the sound you want to resume.')
 
 def setup(client):
     client.add_cog(music(client))
