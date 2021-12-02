@@ -3,6 +3,7 @@ from sys import executable
 import discord
 from discord import message
 from discord.ext import commands
+from discord.ext.commands.core import guild_only
 from discord.flags import MessageFlags
 import youtube_dl
 
@@ -15,7 +16,9 @@ async def play_audio(ctx, url):
     vc = ctx.voice_client
 
     ydl = youtube_dl.YoutubeDL()
-    info = ydl.extract_info(url, download=False)
+    #print(ydl.extract_info(url[0], download))
+    info = ydl.extract_info(url[0], download=False)
+    print("passed info")
     url2 = info['formats'][0]['url']
     print(url2)
     source = await discord.FFmpegOpusAudio.from_probe(url2 ,  method = 'fallback', executable="C:/Users/elev/Documents/FFmpeg/bin/ffmpeg.exe", **FFMPEG_OPTIONS)
@@ -28,26 +31,34 @@ class music(commands.Cog):
     def __init__(self, client):
         self.client = client
         self.queues = {}
+        self.queues_list = []
         self.song = 0
 
     @commands.command()
     async def queue(self, ctx, url):
         print(ctx.guild.id)
-        self.queues[ctx.guild.id].append(url)
-        print(self.queues[ctx.guild.id])
+        self.queues_list.append(url)
+        print(self.queues_list)
         await ctx.send("Added to queue")
 
 
     @commands.command()
     async def play_queue(self, ctx):
-        for song_url in self.queues[ctx.guild_id]:
-            print(song_url)
-            await play_audio(ctx, song_url)
-            await ctx.send("Playing queue'd song")
+        for autoplay in self.queues_list:
+            await play_audio(ctx, self.queues_list)
+        else:
+            await ctx.send("Queue ended")
+        remove_1 = self.queues_list.pop(0)
+        print(remove_1)
+        # for song_url in self.queues_list[ctx.guild.id]:
+        #     print("EROOR")
+        #     print(song_url)
+        #     await play_audio(ctx, song_url)
+        #     await ctx.send("Playing queue'd song")
 
     @commands.command()
-    async def checkqueue (self):
-        print(self.queues)
+    async def checkqueue (self, ctx):
+        print(self.queues_list)
 
     @ commands.command()
     async def play (self, ctx, url):
