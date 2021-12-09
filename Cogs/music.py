@@ -17,7 +17,7 @@ async def play_audio(ctx, url):
 
     ydl = youtube_dl.YoutubeDL()
     #print(ydl.extract_info(url[0], download))
-    info = ydl.extract_info(url[0], download=False)
+    info = ydl.extract_info(url, download=False)
     print("passed info")
     url2 = info['formats'][0]['url']
     print(url2)
@@ -30,9 +30,7 @@ class music(commands.Cog):
 
     def __init__(self, client):
         self.client = client
-        self.queues = {}
         self.queues_list = []
-        self.song = 0
 
     @commands.command()
     async def queue(self, ctx, url):
@@ -44,12 +42,23 @@ class music(commands.Cog):
 
     @commands.command()
     async def play_queue(self, ctx):
-        for autoplay in self.queues_list:
-            await play_audio(ctx, self.queues_list)
-        else:
-            await ctx.send("Queue ended")
-        remove_1 = self.queues_list.pop(0)
-        print(remove_1)
+        while self.queues_list != []:
+            print("STARTING QUEUE")
+            await play_audio(ctx, self.queues_list[0])
+            await ctx.self.queues_list.pop(0)
+            print(self.queues_list)
+
+
+
+        # for autoplay in self.queues_list:
+        #     print("AUTOPLAY")
+        #     print(autoplay)
+        #     await play_audio(ctx, self.autoplay)
+        #     # await play_audio(ctx, self.queues_list)
+        # else:
+        #     await ctx.send("Queue ended")
+        # remove_1 = self.queues_list.pop(0)
+        # print(remove_1)
         # for song_url in self.queues_list[ctx.guild.id]:
         #     print("EROOR")
         #     print(song_url)
@@ -75,14 +84,6 @@ class music(commands.Cog):
         await ctx.voice_client.resume()
         await ctx.send("Playing again!")
     
-    @resume.error
-    async def resume_error(self, ctx, error):
-        if isinstance(error, commands.MissingRequiredArgument):
-            await ctx.send('Please enter the link to the sound you want to resume.')
-    # @pause.error
-    # async def pause_error(self, ctx, error):
-    #     if isinstance(error, commands.MissingRequiredArgument):
-    #         await ctx.send('Please enter the link to the sound witch is playing.')
     
     @commands.command()
     async def join(self, ctx):
